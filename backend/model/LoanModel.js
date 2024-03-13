@@ -4,8 +4,11 @@ const { Schema } = mongoose;
 const LoanSchema = new Schema({
   lan: {
     type: Number,
-    unique: true,
-    default: 1000000000
+    unique: true
+  },
+  primaryApplicant: {
+    type: String,
+    required: true
   },
   startdate: {
     type: Date,
