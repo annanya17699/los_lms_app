@@ -79,7 +79,7 @@ function CreateLoanScreen(props) {
             })}
           </Form.Select>
         </Form.Group>
-        <Button className="inputSubmitBtn" type="submit">
+        <Button className="createBtn" type="submit">
           Create Loan Application
         </Button>
         <Button className="inputBtnRev" style={{float : 'right'}} onClick={closeModal}>

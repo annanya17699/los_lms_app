@@ -1,6 +1,6 @@
 :root {
   --primary-color: #7067DC;
-  --secondary-color: #1F274A;
+  --secondary-color: #061142;
   --info-color: #2F80ED;
   --success-color: #2d936e;
   --error-color: #EB5757;
@@ -36,15 +36,21 @@
 }
 
 .inputSubmitBtn.btn, .inputSubmitBtn.btn:hover, .inputSubmitBtn.btn:focus, .inputBtn, .inputBtn.btn:hover, .inputBtn.btn:focus {
-  background-color: var(--primary-color) !important;
-  color: var(--secondary-50) !important;
-  border-color: var(--primary-50) !important;
+  background-color: var(--success-color) !important;
+  color: white !important;
+  border-color: var(--success-color) !important;
 }
 
 .inputBtnRev.btn, .inputBtnRev.btn:hover, .inputBtnRev.btn:focus {
   background-color: white !important;
   color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
+}
+
+.secondaryInputBtn.btn, .secondaryInputBtn.btn:hover, .secondaryInputBtn.btn:focus {
+  background-color: var(--secondary-color) !important;
+  color: var(--primary-100) !important;
+  border-color: var(--primary-50) !important;
 }
 
 .deleteBtn.btn, .deleteBtn.btn:hover, .deleteBtn.btn:focus {
@@ -54,9 +60,9 @@
 }
 
 .createBtn.btn, .createBtn.btn:hover, .createBtn.btn:focus {
-  background-color: var(--success-color) !important;
-  color: white !important;
-  border-color: var(--success-color) !important;
+  background-color: var(--primary-color) !important;
+  color: var(--secondary-50) !important;
+  border-color: var(--primary-50) !important;
 }
 
 .inputField.form-control, .inputField.form-select {
@@ -66,8 +72,7 @@
 
 .inputBodyCard {
   border: 3px solid var(--secondary-100);
-  position: relative;
-  padding: 3px;
+  padding: 1rem;
   margin: 1rem;
 }
 
@@ -75,7 +80,15 @@
   color : var(--primary-color);
 }
 
-.loanCardTitle {
-  color: var(--primary-500);
+.largeTextPrimary {
+  color: var(--primary-color);
   font-size: 25px;
+}
+
+.textSecondary {
+  color: var(--secondary-color);
+}
+
+.textPrimary {
+  color: var(--primary-color);
 }
