@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
 import LoanContext from "../../context/Loan/LoanContext";
 import { Form, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 function CreateLoanScreen(props) {
   const context = useContext(LoanContext);
-  const {loanTypes, locations} = context;
-  const [newLoan, setNewLoan] = useState({bu:'',location:'', stage:'New', substage:'New', primaryApplicant: ''});
+  const {loanTypes, locations, loanStructure} = context;
+  const [newLoan, setNewLoan] = useState(loanStructure);
+  let history = useHistory();
   const createLoan = async (e) =>{
     e.preventDefault();
     const resp = await fetch(`http://localhost:5000/data/loan/createloan`,{
@@ -14,8 +16,8 @@ function CreateLoanScreen(props) {
       } ,
       body: JSON.stringify(newLoan)
     });
-    const json = await resp.json();
-    console.log(json);
+    let savedLoan = await resp.json();
+    history.push({pathname:'/kyc', state :savedLoan});
     props.handleClose();
   }
 

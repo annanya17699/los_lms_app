@@ -8,7 +8,7 @@ import {
   Col,
   Form,
   Image,
-  InputGroup
+  InputGroup,
 } from "react-bootstrap";
 import HL from "../../assets/HL.jpg";
 import PL from "../../assets/PL.jpg";
@@ -61,7 +61,7 @@ function LoanList() {
         </Col>
         <Col>
           <Form>
-          <InputGroup className="mb-3">
+            <InputGroup className="mb-3">
               <Form.Control type="text" placeholder="Search Loan Application" />
               <Button className="createBtn" type="submit">
                 <FaSearch />
@@ -72,7 +72,9 @@ function LoanList() {
       </Row>
 
       <h3>Loan Applications</h3>
-      {loanList &&
+      {loanList && loanList.length === 0 ? (
+        <div className="inputBodyCard">No Loans Available</div>
+      ) : (
         loanList.map((loan) => {
           return (
             <div className="inputBodyCard">
@@ -119,7 +121,8 @@ function LoanList() {
               </Row>
             </div>
           );
-        })}
+        })
+      )}
 
       <Modal
         show={show}

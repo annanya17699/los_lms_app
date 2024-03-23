@@ -1,5 +1,7 @@
 import './App.css';
+import KYCScreen from './components/LOS/KYCScreen';
 import LOSHome from './components/LOS/LOSHome';
+import ApplicantState from './context/Applicant/ApplicantState';
 import LoanState from './context/Loan/LoanState';
 import {
   BrowserRouter as Router,
@@ -9,15 +11,22 @@ import {
 function App() {
   return (
     <>
+    
     <LoanState>
+    <ApplicantState>
     <Router>
         <Switch>
-          <Route path="/">
+          <Route exact path="/">
           <LOSHome/>
+          </Route>
+          <Route exact path="/kyc">
+          <KYCScreen/>
           </Route>
         </Switch>
     </Router>
+    </ApplicantState>
     </LoanState>
+    
     </>
   );
 }
