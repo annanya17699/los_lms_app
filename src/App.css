@@ -76,6 +76,12 @@
   margin: 1rem;
 }
 
+.inputheadercard {
+  background-color: var(--primary-50) !important;
+  color: var(--secondary-color) !important;
+  font-weight: bolder;
+}
+
 .icon {
   color : var(--primary-color);
 }
@@ -91,4 +97,56 @@
 
 .textPrimary {
   color: var(--primary-color);
+}
+
+.progressBar {
+  display: flex;
+  justify-content: space-between;
+  color: var(--secondary-700);
+  font-weight: bolder;
+}
+
+.step-item {
+  position : relative;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  width: 9rem;
+}
+
+.step-item:not(:first-child)::before{
+  content: '';
+  position: absolute;
+  background-color: var(--primary-400);
+  width: 120%;
+  height: 3px;
+  top: 25%;
+  right:50%;
+  transform: translateY(-50%);
+}
+
+
+.step {
+  width :2.5rem;
+  height: 2.5rem;
+  display: flex;
+  z-index: 1;
+  position: relative;
+  background-color: var(--primary-100);
+  align-items: center;
+  border-radius: 9999px;
+  justify-content: center;
+  font-weight: bolder;
+  color: var(--primary-600);
+}
+
+.step-item.active .step {
+  background-color: var(--primary-400);
+  color: var(--primary-50);
+}
+
+.step-item.complete .step {
+  background-color: var(--success-color);
+  color: var(--secondary-50);
 }

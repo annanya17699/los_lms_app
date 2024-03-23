@@ -17,10 +17,11 @@ import LAP from "../../assets/LAP.jpg";
 import NC from "../../assets/NC.jpg";
 import TW from "../../assets/TW.jpg";
 import EL from "../../assets/EL.jpg";
-
+import { useHistory } from "react-router-dom";
 import { FaPlusCircle, FaFilter, FaTrash, FaSearch } from "react-icons/fa";
 import { GrView } from "react-icons/gr";
 function LoanList() {
+  let history = useHistory();
   const [show, setShow] = useState(false);
   const [loanList, setLoanList] = useState([]);
   const loanTypesVSIcon = {
@@ -46,6 +47,16 @@ function LoanList() {
     console.log(json);
     setLoanList(json);
   };
+  const openExistingLoan = async (id) => {
+    const resp = await fetch(`http://localhost:5000/data/loan/getloan/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await resp.json();
+    history.push({pathname:'/loan', state :json});
+  }
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
@@ -113,7 +124,7 @@ function LoanList() {
                     <Button className="deleteBtn">
                       <FaTrash />
                     </Button>
-                    <Button className="inputSubmitBtn mx-3">
+                    <Button className="inputSubmitBtn mx-3" onClick={()=>openExistingLoan(loan._id)}>
                       <GrView />
                     </Button>
                   </span>

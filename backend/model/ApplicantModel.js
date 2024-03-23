@@ -103,6 +103,10 @@ const ApplicantSchema = new Schema({
     type: String,
     required: true,
   },
+  relation: {
+    type: String,
+    default: 'Self'
+  }
 });
 
 module.exports = mongoose.model("Applicant", ApplicantSchema);

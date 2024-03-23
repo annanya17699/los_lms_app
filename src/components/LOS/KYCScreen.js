@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Card, CardHeader, CardTitle } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import ApplicantContext from "../../context/Applicant/ApplicantContext";
-function KYCScreen() {
+function KYCScreen({handleDisableNext, type}) {
   const context = useContext(ApplicantContext);
-  const { applicantStructure, gender, maritalStatus, occupation } = context;
+  const { applicantStructure, gender, maritalStatus, occupation, nationality, IdProofList, AddProofList, education, relation } = context;
   let location = useLocation();
   const [loan, setLoan] = useState(location.state);
   const [applicant, setApplicant] = useState(applicantStructure);
+  const [readonly, setReadonly] = useState(false);
 
   const onApplicantChange = (e) => {
     setApplicant({ ...applicant, [e.target.name]: e.target.value });
@@ -15,16 +16,34 @@ function KYCScreen() {
 
   useEffect(() => {
     setLoan(location.state);
-    setApplicant({...applicant, lan: location.state.lan, type : 'Applicant'});
+    setApplicant({...applicant, lan: location.state.lan, type : type, relation: 'Self'});
     console.log(location.state)
   }, [location]);
-  const updateLoan = () => {};
+
+  const createApplicant = async (e) =>{
+    e.preventDefault();
+    setReadonly(true);
+    const resp = await fetch(`http://localhost:5000/data/applicant/createapplicant`,{
+      method : 'POST',
+      headers : {
+        "Content-Type": "application/json"
+      } ,
+      body: JSON.stringify(applicant)
+    });
+    let applicantNew = await resp.json();
+    if(type === 'Applicant') await handleDisableNext(applicantNew, loan, 'Co-Applicant KYC');
+    else if(type === 'Co-Applicant') await handleDisableNext(applicantNew, loan, 'Financial Details');
+  }
+
   return (
-    <Container>
+    <Card className="inputBodyCard"> 
+    <CardHeader className="inputheadercard">
+      <CardTitle>{type} Details</CardTitle>
+    </CardHeader>
       {loan && (
         <Form
           onSubmit={(e) => {
-            updateLoan(e);
+            createApplicant(e);
           }}
         >
           <Form.Group className="mb-3" controlId="name">
@@ -39,6 +58,7 @@ function KYCScreen() {
                   value={applicant.fname}
                   minLength={3}
                   required={true}
+                  readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -49,6 +69,7 @@ function KYCScreen() {
                   name="mname"
                   type="text"
                   value={applicant.mname}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -61,6 +82,7 @@ function KYCScreen() {
                   value={applicant.lname}
                   minLength={3}
                   required={true}
+                  readOnly={readonly}
                 />
               </Col>
             </Row>
@@ -76,6 +98,7 @@ function KYCScreen() {
                   type="date"
                   value={applicant.dob}
                   required={true}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -88,9 +111,10 @@ function KYCScreen() {
                   value={applicant.gender}
                   required={true}
                 >
+                  <option value=''>None</option>
                   {gender &&
                     gender.map((type) => {
-                      return <option>{type}</option>;
+                      return <option value={type} selected={type === applicant.gender}>{type}</option>;
                     })}
                 </Form.Select>
               </Col>
@@ -104,9 +128,27 @@ function KYCScreen() {
                   value={applicant.occupation}
                   required={true}
                 >
+                  <option value=''>None</option>
                   {occupation &&
                     occupation.map((type) => {
-                      return <option>{type}</option>;
+                      return <option value={type} selected={type === applicant.occupation}>{type}</option>;
+                    })}
+                </Form.Select>
+              </Col>
+              <Col>
+                <Form.Label>Education</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="inputField"
+                  name="education"
+                  onChange={(e) => onApplicantChange(e)}
+                  value={applicant.education}
+                  required={true}
+                >
+                  <option value=''>None</option>
+                  {education &&
+                    education.map((type) => {
+                      return <option value={type} selected={type === applicant.education}>{type}</option>;
                     })}
                 </Form.Select>
               </Col>
@@ -120,9 +162,10 @@ function KYCScreen() {
                   value={applicant.maritalStatus}
                   required={true}
                 >
+                  <option value=''>None</option>
                   {maritalStatus &&
                     maritalStatus.map((type) => {
-                      return <option>{type}</option>;
+                      return <option value={type} selected={type === applicant.maritalStatus}>{type}</option>;
                     })}
                 </Form.Select>
               </Col>
@@ -141,6 +184,7 @@ function KYCScreen() {
                   minLength={10}
                   required={true}
                   value={applicant.pan}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -154,6 +198,7 @@ function KYCScreen() {
                   minLength={10}
                   required={true}
                   value={applicant.mobile}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -165,7 +210,25 @@ function KYCScreen() {
                   type="email"
                   value={applicant.email}
                   required={true}
+                readOnly={readonly}
                 />
+              </Col>
+              <Col>
+                <Form.Label>Nationality</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="inputField"
+                  name="nationality"
+                  onChange={(e) => onApplicantChange(e)}
+                  value={applicant.nationality}
+                  required={true}
+                >
+                  <option value=''>None</option>
+                  {nationality &&
+                    nationality.map((type) => {
+                      return <option value={type} selected={type === applicant.nationality}>{type}</option>;
+                    })}
+                </Form.Select>
               </Col>
             </Row>
           </Form.Group>
@@ -181,6 +244,7 @@ function KYCScreen() {
                   value={applicant.house}
                   required={true}
                   minLength={3}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -193,6 +257,7 @@ function KYCScreen() {
                   value={applicant.street}
                   required={true}
                   minLength={3}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -200,11 +265,12 @@ function KYCScreen() {
                 <Form.Control
                   className="inputField"
                   onChange={(e) => onApplicantChange(e)}
-                  name="text"
-                  type="city"
-                  value={applicant.city}
+                  name="city"
+                  type="text"
                   required={true}
+                  value={applicant.city}
                   minLength={3}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -212,11 +278,12 @@ function KYCScreen() {
                 <Form.Control
                   className="inputField"
                   onChange={(e) => onApplicantChange(e)}
-                  name="text"
-                  type="state"
-                  value={applicant.state}
+                  name="state"
+                  type="text"
                   required={true}
+                  value={applicant.state}
                   minLength={3}
+                readOnly={readonly}
                 />
               </Col>
               <Col>
@@ -224,22 +291,143 @@ function KYCScreen() {
                 <Form.Control
                   className="inputField"
                   onChange={(e) => onApplicantChange(e)}
-                  name="number"
+                  name="pincode"
                   maxLength={6}
                   minLength={6}
+                  type="number"
                   required={true}
-                  type="state"
-                  value={applicant.state}
+                  value={applicant.pincode}
+                readOnly={readonly}
                 />
               </Col>
             </Row>
           </Form.Group>
-          <Button className="createBtn" type="submit">
+          <Form.Group className="mb-3" controlId="family">
+            <Row>
+              <Col>
+                <Form.Label>Father Name</Form.Label>
+                <Form.Control
+                  className="inputField"
+                  onChange={(e) => onApplicantChange(e)}
+                  name="fatherName"
+                  type="text"
+                  value={applicant.fatherName}
+                  required={true}
+                  minLength={3}
+                readOnly={readonly}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Mother Name</Form.Label>
+                <Form.Control
+                  className="inputField"
+                  onChange={(e) => onApplicantChange(e)}
+                  name="motherName"
+                  type="text"
+                  value={applicant.motherName}
+                  required={true}
+                  minLength={3}
+                readOnly={readonly}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Spouse Name</Form.Label>
+                <Form.Control
+                  className="inputField"
+                  onChange={(e) => onApplicantChange(e)}
+                  name="spouse"
+                  type="text"
+                  value={applicant.spouse}
+                  minLength={3}
+                readOnly={readonly}
+                />
+              </Col>
+              {type === 'Co-Applicant' &&
+              <Col>
+                <Form.Label>Relation with Applicant</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="inputField"
+                  name="relation"
+                  onChange={(e) => onApplicantChange(e)}
+                  value={applicant.relation}
+                  required={true}
+                >
+                  <option value=''>None</option>
+                  {relation &&
+                    relation.map((type) => {
+                      return <option value={type} selected={type === applicant.relation}>{type}</option>;
+                    })}
+                </Form.Select>
+              </Col>}
+            </Row>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="proof">
+            <Row>
+              <Col>
+                <Form.Label>Proof of Identity</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="inputField"
+                  name="poi"
+                  onChange={(e) => onApplicantChange(e)}
+                  value={applicant.poi}
+                  required={true}
+                >
+                  <option value=''>None</option>
+                  {IdProofList &&
+                    IdProofList.map((type) => {
+                      return <option value={type} selected={type === applicant.poi}>{type}</option>;
+                    })}
+                </Form.Select>
+                <br/>
+                <Form.Control
+                  className="inputField"
+                  onChange={(e) => onApplicantChange(e)}
+                  name="poinum"
+                  type="text"
+                  value={applicant.poinum}
+                  required={true}
+                  minLength={3}
+                readOnly={readonly}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Proof of Address</Form.Label>
+                <Form.Select
+                  aria-label="Default select example"
+                  className="inputField"
+                  name="poa"
+                  onChange={(e) => onApplicantChange(e)}
+                  value={applicant.poa}
+                  required={true}
+                >
+                  <option value=''>None</option>
+                  {AddProofList &&
+                    AddProofList.map((type) => {
+                      return <option value={type} selected={type === applicant.poa}>{type}</option>;
+                    })}
+                </Form.Select>
+                <br/>
+                <Form.Control
+                  className="inputField"
+                  onChange={(e) => onApplicantChange(e)}
+                  name="poanum"
+                  type="text"
+                  value={applicant.poanum}
+                  required={true}
+                  minLength={3}
+                readOnly={readonly}
+                />
+              </Col>
+            </Row>
+          </Form.Group>
+          <Button className="inputSubmitBtn" type="submit" disabled={readonly}>
             Save KYC Details
           </Button>
         </Form>
       )}
-    </Container>
+    </Card>
   );
 }
 

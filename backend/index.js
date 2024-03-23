@@ -9,6 +9,7 @@ app.use(express.json());
 
 app.use('/auth/user', require('./routes/auth/User'));
 app.use('/data/loan', require('./routes/data/Loan'));
+app.use('/data/applicant', require('./routes/data/Applicant'));
 app.listen(port, () => {
   console.log('port: '+port)
 })

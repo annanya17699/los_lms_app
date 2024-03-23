@@ -80,4 +80,44 @@ router.get("/getloanlist", async (req, res) => {
     res.status(500).json({ error: "Server error 500" });
   }
 });
+
+router.get("/getloan/:id", async (req, res) => {
+  try {
+    const loan = await Loan.findById(req.params.id);
+    res.json(loan);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error 500" });
+  }
+});
+
+router.put(
+  "/updateLoan/:id/:appId/:substage",
+  async (req, res) => {
+    try {
+      const existingLoan = await Loan.findById(req.params.id);
+    if (!existingLoan) return res.status(404).json({ error: "Note not Found" });
+      let newstage = "";
+      let newsubstage = "";
+      if (req.params.substage === "Co-Applicant KYC") {
+        existingLoan.newstage = "KYC";
+        existingLoan.newsubstage = "Co-Applicant KYC";
+        existingLoan.applicantList.push(req.params.appId);
+      }else if(req.params.substage === "Financial Details"){
+        existingLoan.newstage = "Financial Details";
+        existingLoan.newsubstage = "Financial Details";
+        existingLoan.applicantList.push(req.params.appId);
+      }
+      const loanUpdated = await Loan.findByIdAndUpdate(
+        req.params.id,
+        { $set: existingLoan },
+        { new: true }
+      );
+      res.json(loanUpdated);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Server error 500" });
+    }
+  }
+);
 module.exports = router;
