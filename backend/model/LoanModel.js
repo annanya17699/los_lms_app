@@ -26,13 +26,10 @@ const LoanSchema = new Schema({
   },
   uw: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
   },
-  eligibility: {
-    type: Boolean,
-  },
-  creditscore: {
-    type: Number,
+  bankdetails: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "financial"
   },
   disbursal: {
     type: Date,

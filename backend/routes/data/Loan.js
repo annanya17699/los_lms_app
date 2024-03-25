@@ -23,7 +23,6 @@ router.post(
         so,
         uw,
         eligibility,
-        creditscore,
         disbursal,
         stage,
         substage,
@@ -31,6 +30,7 @@ router.post(
         location,
         cancelreason,
         canceldate,
+        bankdetails
       } = req.body;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -51,16 +51,15 @@ router.post(
         applicantList,
         assetList,
         so : '65f6a9c8285d4c909c2e99d8',
-        uw : '65f6a9c8285d4c909c2e99d8',
-        eligibility,
-        creditscore,
+        uw,
         disbursal,
         stage: stage !== 'New' ? stage : newstage,
         substage: substage !== 'New' ? substage : newsubstage,
         bu,
         location,
         cancelreason,
-        canceldate
+        canceldate,
+        bankdetails
       });
       const saveLan = await loan.save();
       res.json(saveLan);
@@ -92,22 +91,54 @@ router.get("/getloan/:id", async (req, res) => {
 });
 
 router.put(
-  "/updateLoan/:id/:appId/:substage",
+  "/updateLoan/:id/:appId/:stage/:substage",
   async (req, res) => {
     try {
       const existingLoan = await Loan.findById(req.params.id);
     if (!existingLoan) return res.status(404).json({ error: "Note not Found" });
-      let newstage = "";
-      let newsubstage = "";
-      if (req.params.substage === "Co-Applicant KYC") {
-        existingLoan.newstage = "KYC";
-        existingLoan.newsubstage = "Co-Applicant KYC";
+      if(req.params.stage === 'KYC' || req.params.stage === 'Financial Details'){
         existingLoan.applicantList.push(req.params.appId);
-      }else if(req.params.substage === "Financial Details"){
-        existingLoan.newstage = "Financial Details";
-        existingLoan.newsubstage = "Financial Details";
-        existingLoan.applicantList.push(req.params.appId);
+      }else if(req.params.stage === 'Asset Details'){
+        existingLoan.bankdetails = req.params.appId;
+      }else if(req.params.stage === 'Underwriting'){
+        existingLoan.assetList.push(req.params.appId);
+      }else if(req.params.stage === 'Upload Documents'){
+        existingLoan.uw = req.params.appId;
+      }else if(req.params.stage === 'Disbursal'){
+        existingLoan.disbursal = Date.now();
       }
+      existingLoan.stage = req.params.stage;
+      existingLoan.substage = req.params.substage;
+      const loanUpdated = await Loan.findByIdAndUpdate(
+        req.params.id,
+        { $set: existingLoan },
+        { new: true }
+      );
+      res.json(loanUpdated);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Server error 500" });
+    }
+  }
+);
+
+router.put(
+  "/cancelLoan/:id",
+  [
+    body("cancelreason", "invalid cancel reason").isLength({ min: 3 })
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      const existingLoan = await Loan.findById(req.params.id);
+    if (!existingLoan) return res.status(404).json({ error: "Note not Found" });
+      existingLoan.stage = 'Cancel';
+      existingLoan.substage = 'Cancel';
+      existingLoan.canceldate = Date.now();
+      existingLoan.cancelreason = req.body.cancelreason;
       const loanUpdated = await Loan.findByIdAndUpdate(
         req.params.id,
         { $set: existingLoan },

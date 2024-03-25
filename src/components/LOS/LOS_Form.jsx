@@ -13,12 +13,12 @@ const LOS_Form = () => {
         setCurrentStep(index+1);
       }, [location]);
 
-    const handleDisableNext = (applicantData, loan, substage) => {
+    const handleDisableNext = (applicantData, loan,stage, substage) => {
         setDisableNext(false);
-        updateLoan(loan._id, applicantData._id, substage)
+        updateLoan(loan._id, applicantData._id,stage, substage)
     }
-    const updateLoan = async (id, appId, substage) =>{
-        const resp = await fetch(`http://localhost:5000/data/loan/updateLoan/${id}/${appId}/${substage}`,{
+    const updateLoan = async (id, appId, stage, substage) =>{
+        const resp = await fetch(`http://localhost:5000/data/loan/updateLoan/${id}/${appId}/${stage}/${substage}`,{
           method : 'PUT',
           headers : {
             "Content-Type": "application/json"

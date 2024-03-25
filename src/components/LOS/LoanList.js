@@ -9,6 +9,7 @@ import {
   Form,
   Image,
   InputGroup,
+  Alert
 } from "react-bootstrap";
 import HL from "../../assets/HL.jpg";
 import PL from "../../assets/PL.jpg";
@@ -57,9 +58,30 @@ function LoanList() {
     const json = await resp.json();
     history.push({pathname:'/loan', state :json});
   }
+  const cancelLoan = async (id) => {
+    const resp = await fetch(`http://localhost:5000/data/loan/cancelLoan/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        'cancelreason' : 'Cancel Loan'
+      })
+    });
+    setShowAlert(true);
+  }
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [showAlert, setShowAlert] = useState(false);
+
   return (
+    <>
+    { showAlert  ?  <>
+        <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+          <Alert.Heading>Loan Cancelled!</Alert.Heading>
+        </Alert>
+        </> : <></>
+}
     <Container className="my-5">
       <Row>
         <Col>
@@ -121,10 +143,10 @@ function LoanList() {
                 </Col>
                 <Col>
                   <span style={{ float: "right" }}>
-                    <Button className="deleteBtn">
+                    <Button className="deleteBtn" disabled={loan.stage === 'Cancel'} onClick={()=>cancelLoan(loan._id)}>
                       <FaTrash />
                     </Button>
-                    <Button className="inputSubmitBtn mx-3" onClick={()=>openExistingLoan(loan._id)}>
+                    <Button className="inputSubmitBtn mx-3" disabled={loan.stage === 'Cancel'} onClick={()=>openExistingLoan(loan._id)}>
                       <GrView />
                     </Button>
                   </span>
@@ -146,6 +168,7 @@ function LoanList() {
         </Modal.Body>
       </Modal>
     </Container>
+    </>
   );
 }
 

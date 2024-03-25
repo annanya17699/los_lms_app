@@ -31,8 +31,8 @@ function KYCScreen({handleDisableNext, type}) {
       body: JSON.stringify(applicant)
     });
     let applicantNew = await resp.json();
-    if(type === 'Applicant') await handleDisableNext(applicantNew, loan, 'Co-Applicant KYC');
-    else if(type === 'Co-Applicant') await handleDisableNext(applicantNew, loan, 'Financial Details');
+    if(type === 'Applicant') await handleDisableNext(applicantNew, loan,'KYC', 'Co-Applicant KYC');
+    else if(type === 'Co-Applicant') await handleDisableNext(applicantNew, loan, 'Financial Details', 'Financial Details');
   }
 
   return (

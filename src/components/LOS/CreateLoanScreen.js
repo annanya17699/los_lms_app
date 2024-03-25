@@ -50,6 +50,7 @@ function CreateLoanScreen(props) {
           name="primaryApplicant"
             type="text"
             value={newLoan.primaryApplicant}
+            required={true}
           />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -65,7 +66,7 @@ function CreateLoanScreen(props) {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Location</Form.Label>
-          <Form.Select aria-label="Default select example" className="inputField" name="location"
+          <Form.Select aria-label="Default select example" className="inputField" name="location" required={true}
           onChange={(e)=>onChange(e)} value={newLoan.location}>
             {locations && locations.map((type)=>{
               return <option>{type}</option>
@@ -74,7 +75,7 @@ function CreateLoanScreen(props) {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Business Unit</Form.Label>
-          <Form.Select aria-label="Default select example" className="inputField" name="bu"
+          <Form.Select aria-label="Default select example" className="inputField" name="bu" required={true}
           onChange={(e)=>onChange(e)} value={newLoan.bu}>
             {loanTypes && loanTypes.map((type)=>{
               return <option>{type}</option>

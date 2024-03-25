@@ -7,20 +7,19 @@ function LoanState(props) {
     const loanStructure = {
       lan: '',
       primaryApplicant: '',
-      startdate: '',
+      startdate: Date.now(),
       applicantList: [],
       assetList: [],
       so: '',
-      uw: '',
-      eligibility: false,
-      creditscore: 0,
+      uw: null,
       disbursal: null,
       stage: 'New',
       substage: 'New',
       bu: '',
       location: '',
       cancelreason: '',
-      canceldate: null
+      canceldate: null,
+      bankdetails: null
     }
   return (
     <LoanContext.Provider value={{loanTypes, locations, loanStructure}}>
