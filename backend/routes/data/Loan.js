@@ -22,7 +22,6 @@ router.post(
         assetList,
         so,
         uw,
-        eligibility,
         disbursal,
         stage,
         substage,

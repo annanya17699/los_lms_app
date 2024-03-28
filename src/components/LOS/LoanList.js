@@ -56,7 +56,7 @@ function LoanList() {
       },
     });
     const json = await resp.json();
-    history.push({pathname:'/loan', state :json});
+    history.push({pathname:`/loan/${json.lan}`, state :json});
   }
   const cancelLoan = async (id) => {
     const resp = await fetch(`http://localhost:5000/data/loan/cancelLoan/${id}`, {

@@ -17,7 +17,7 @@ function CreateLoanScreen(props) {
       body: JSON.stringify(newLoan)
     });
     let savedLoan = await resp.json();
-    history.push({pathname:'/loan', state :savedLoan});
+    history.push({pathname:`/loan/${savedLoan.lan}`, state :savedLoan});
     props.handleClose();
   }
 

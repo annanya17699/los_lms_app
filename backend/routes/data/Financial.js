@@ -40,7 +40,7 @@ router.post(
           accounttype
       });
       const bankDetailsSaved = await bankdetails.save();
-      res.json({id :bankDetailsSaved._id});
+      res.json(bankDetailsSaved);
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Server error 500" });
