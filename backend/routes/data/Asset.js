@@ -6,11 +6,10 @@ const { body, validationResult } = require("express-validator");
 router.post(
   "/createasset",
   [
-    body("lan", "invalid lan").isLength({ min: 10 }),
-    body("loantenure", "invalid branch").isNumeric(),
-    body("frequency", "invalid ifsc").isNumeric(),
-    body("type", "invalid micr").isLength({ min: 3 }),
-    body("description", "invalid beneficiary").isLength({ min: 3 }),
+    body("loantenure", "invalid loantenure").isNumeric(),
+    body("frequency", "invalid frequency").isLength({ min: 3 }),
+    body("type", "invalid type").isLength({ min: 3 }),
+    body("description", "invalid description").isLength({ min: 3 }),
     body("loanamount", "invalid accountnumber").isNumeric(),
   ],
   async (req, res) => {
@@ -19,10 +18,10 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { lan, loantenure, frequency, type, description, loanamount } = req.body;
+      const { loantenure, frequency, type, description, loanamount, category } = req.body;
 
       const asset = new Asset({
-        lan, loantenure, frequency, type, description, loanamount
+        loantenure, frequency, type, description, loanamount, category
       });
       const assetsaved = await asset.save();
       res.json(assetsaved);

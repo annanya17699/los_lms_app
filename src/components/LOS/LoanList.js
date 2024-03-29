@@ -19,8 +19,8 @@ import NC from "../../assets/NC.jpg";
 import TW from "../../assets/TW.jpg";
 import EL from "../../assets/EL.jpg";
 import { useHistory } from "react-router-dom";
-import { FaPlusCircle, FaFilter, FaTrash, FaSearch } from "react-icons/fa";
-import { GrView } from "react-icons/gr";
+import { FaPlusCircle, FaFilter, FaSearch, FaEdit } from "react-icons/fa";
+
 function LoanList() {
   let history = useHistory();
   const [show, setShow] = useState(false);
@@ -69,6 +69,7 @@ function LoanList() {
       })
     });
     setShowAlert(true);
+    fetchAllLoans();
   }
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -130,24 +131,19 @@ function LoanList() {
                 <Col>
                   <Row>
                     <Col>
-                      <b className="textPrimary">&#8377; 500000</b>
+                      <b className="textSecondary">
+                        Created : {new Date(loan.startdate).toLocaleDateString('en-GB')}
+                      </b>
                     </Col>
                   </Row>
                 </Col>
                 <Col>
-                  <Row>
-                    <Col>
-                      <b className="textSecondary">{loan.location}</b>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col>
-                  <span style={{ float: "right" }}>
-                    <Button className="deleteBtn" disabled={loan.stage === 'Cancel'} onClick={()=>cancelLoan(loan._id)}>
-                      <FaTrash />
+                  <span style={{ float: "center" }}>
+                    <Button className="deleteBtn" hidden={loan.stage === 'Cancel' || loan.stage === 'Disbursal'} onClick={()=>cancelLoan(loan._id)}>
+                      Cancel Loan
                     </Button>
-                    <Button className="inputSubmitBtn mx-3" disabled={loan.stage === 'Cancel'} onClick={()=>openExistingLoan(loan._id)}>
-                      <GrView />
+                    <Button className="inputSubmitBtn mx-3" hidden={loan.stage === 'Cancel'} onClick={()=>openExistingLoan(loan._id)}>
+                      Edit <FaEdit />
                     </Button>
                   </span>
                 </Col>

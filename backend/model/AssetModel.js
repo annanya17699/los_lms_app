@@ -2,16 +2,12 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const AssetScheme = new Schema({
-  lan: {
-    type: String,
-    required: true
-  },
   loantenure: {
     type: Number,
     required: true
   },
   frequency: {
-    type: Number,
+    type: String,
     required: true
   },
   type: {
@@ -24,7 +20,11 @@ const AssetScheme = new Schema({
   loanamount:{
     type: Number,
     required: true
-  }
+  },
+  category: {
+    type: String,
+    required: true
+  },
 });
 
 module.exports = mongoose.model("asset", AssetScheme);

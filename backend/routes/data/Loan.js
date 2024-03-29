@@ -143,7 +143,7 @@ router.put(
         { $set: existingLoan },
         { new: true }
       );
-      res.json(loanUpdated);
+      res.json({success : "Cancelled Successfully"});
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Server error 500" });
