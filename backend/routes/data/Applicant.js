@@ -93,4 +93,14 @@ router.get("/getapplicantlist", async (req, res) => {
     res.status(500).json({ error: "Server error 500" });
   }
 });
+
+router.get("/getapplicant/:type/:lan", async (req, res) => {
+  try {
+    const applicants = await Applicant.find({type : req.params.type, lan : req.params.lan});
+    res.json(applicants);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error 500" });
+  }
+});
 module.exports = router;

@@ -9,7 +9,7 @@ function FinancialScreen({handleDisableNext}) {
   const [loan, setLoan] = useState(location.state);
   const [bank, setBank] = useState(bankstructure);
   const [readonly, setReadonly] = useState(false);
-
+  const [validated, setValidated] = useState(false);
   const onApplicantChange = (e) => {
     setBank({ ...bank, [e.target.name]: e.target.value });
   };
@@ -20,6 +20,12 @@ function FinancialScreen({handleDisableNext}) {
 
   const createBankDetails = async (e) =>{
     e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+    }else if(form.checkValidity() === true){
+    setValidated(true);
     setReadonly(true);
     const resp = await fetch(`http://localhost:5000/data/bank/createbankdetails`,{
       method : 'POST',
@@ -31,6 +37,7 @@ function FinancialScreen({handleDisableNext}) {
     let bankdetailsNew = await resp.json();
     await handleDisableNext(bankdetailsNew, loan,'Asset Details', 'Asset Details');
   }
+  }
 
   return (
     <Card className="inputBodyCard"> 
@@ -39,6 +46,8 @@ function FinancialScreen({handleDisableNext}) {
     </CardHeader>
       {loan && (
         <Form
+        noValidate
+        validated={validated}
           onSubmit={(e) => {
             createBankDetails(e);
           }}
@@ -65,6 +74,7 @@ function FinancialScreen({handleDisableNext}) {
                   onChange={(e) => onApplicantChange(e)}
                   name="branchname"
                   type="text"
+                  required={true}
                   value={bank.branchname}
                 readOnly={readonly}
                 />

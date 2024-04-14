@@ -56,6 +56,7 @@ function LoanList() {
       },
     });
     const json = await resp.json();
+    console.log(json)
     history.push({pathname:`/loan/${json.lan}`, state :json});
   }
   const cancelLoan = async (id) => {

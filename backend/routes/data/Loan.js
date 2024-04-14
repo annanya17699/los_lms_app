@@ -29,7 +29,8 @@ router.post(
         location,
         cancelreason,
         canceldate,
-        bankdetails
+        bankdetails,
+        documentList
       } = req.body;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -58,7 +59,8 @@ router.post(
         location,
         cancelreason,
         canceldate,
-        bankdetails
+        bankdetails,
+        documentList
       });
       const saveLan = await loan.save();
       res.json(saveLan);

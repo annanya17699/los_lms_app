@@ -16,9 +16,15 @@ const LoanSchema = new Schema({
   },
   applicantList: {
     type: [mongoose.Schema.Types.ObjectId],
+    ref: "Applicant"
+  },
+  documentList: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "document"
   },
   assetList: {
     type: [mongoose.Schema.Types.ObjectId],
+    ref: "asset"
   },
   so: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +32,7 @@ const LoanSchema = new Schema({
   },
   uw: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "underwriting"
   },
   bankdetails: {
     type: mongoose.Schema.Types.ObjectId,

@@ -6,9 +6,16 @@ function CreateLoanScreen(props) {
   const context = useContext(LoanContext);
   const {loanTypes, locations, loanStructure} = context;
   const [newLoan, setNewLoan] = useState(loanStructure);
+  const [validated, setValidated] = useState(false);
   let history = useHistory();
   const createLoan = async (e) =>{
     e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+    }else if(form.checkValidity() === true){
+    setValidated(true);
     const resp = await fetch(`http://localhost:5000/data/loan/createloan`,{
       method : 'POST',
       headers : {
@@ -20,6 +27,7 @@ function CreateLoanScreen(props) {
     history.push({pathname:`/loan/${savedLoan.lan}`, state :savedLoan});
     props.handleClose();
   }
+  }
 
   const closeModal = () =>{
     props.handleClose();
@@ -30,7 +38,9 @@ function CreateLoanScreen(props) {
   return (
     <div className="inputContainer">
       <h3>Create new Loan</h3>
-      <Form onSubmit={(e)=>{createLoan(e)}}>
+      <Form onSubmit={(e)=>{createLoan(e)}}          
+      noValidate
+      validated={validated}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Stage</Form.Label>
           <Form.Control

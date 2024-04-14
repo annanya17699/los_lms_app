@@ -3,7 +3,7 @@ import ApplicantContext from "./ApplicantContext";
 
 function ApplicantState(props) {
   const IdProofList = ['Aadhaar', 'Driver License', 'Voter Id Card', 'Passport'];
-  const AddProofList = ['Aadhaar', 'Driver License', 'Voter Id Card', 'Passport', 'Land Holding', 'Electricity Bill', 'Water Bill', 'Rent Aggreement'];
+  const AddProofList = ['Aadhaar', 'Driver License', 'Voter Id Card', 'Passport'];
   const gender = ["Male", "Female", "Transgender"];
   const maritalStatus = ["Single", "Married", "Divorced", "Widowed"];
   const relation = ["Father", "Mother", "Son", "Daughter", "Spouse", "Brother", "Sister","Father In Law", "Mother In Law", "Brother In Law", "Sister in Law", "Son In Law", "Daughter In Law"];

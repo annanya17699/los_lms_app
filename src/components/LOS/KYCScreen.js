@@ -9,19 +9,24 @@ function KYCScreen({handleDisableNext, type}) {
   const [loan, setLoan] = useState(location.state);
   const [applicant, setApplicant] = useState(applicantStructure);
   const [readonly, setReadonly] = useState(false);
-
+  const [validated, setValidated] = useState(false);
   const onApplicantChange = (e) => {
     setApplicant({ ...applicant, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
-    setLoan(location.state);
-    setApplicant({...applicant, lan: location.state.lan, type : type, relation: 'Self'});
-    console.log(location.state)
+      setLoan(location.state);
+      setApplicant({...applicant, lan: location.state.lan, type : type, relation: 'Self'});
   }, [location]);
-
+ 
   const createApplicant = async (e) =>{
     e.preventDefault();
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidated(true);
+    }else if(form.checkValidity() === true){
+    setValidated(true);
     setReadonly(true);
     const resp = await fetch(`http://localhost:5000/data/applicant/createapplicant`,{
       method : 'POST',
@@ -34,6 +39,7 @@ function KYCScreen({handleDisableNext, type}) {
     if(type === 'Applicant') await handleDisableNext(applicantNew, loan,'KYC', 'Co-Applicant KYC');
     else if(type === 'Co-Applicant') await handleDisableNext(applicantNew, loan, 'Financial Details', 'Financial Details');
   }
+  }
 
   return (
     <Card className="inputBodyCard"> 
@@ -42,10 +48,22 @@ function KYCScreen({handleDisableNext, type}) {
     </CardHeader>
       {loan && (
         <Form
+        noValidate
+          validated={validated}
           onSubmit={(e) => {
             createApplicant(e);
           }}
         >
+          <Form.Group className="mb-3" controlId="lan">
+          <Form.Label>Loan Application Number</Form.Label>
+                <Form.Control
+                  className="inputField"
+                  name="lan"
+                  type="text"
+                  value={applicant.lan}
+                  readOnly={true}
+                />
+          </Form.Group>
           <Form.Group className="mb-3" controlId="name">
             <Row>
               <Col>
@@ -180,8 +198,7 @@ function KYCScreen({handleDisableNext, type}) {
                   onChange={(e) => onApplicantChange(e)}
                   name="pan"
                   type="text"
-                  maxLength={10}
-                  minLength={10}
+                  pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
                   required={true}
                   value={applicant.pan}
                 readOnly={readonly}

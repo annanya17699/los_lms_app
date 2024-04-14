@@ -3,11 +3,11 @@ const { Schema } = mongoose;
 
 const UnderwritingScheme = new Schema({
   totalIncome : {
-    type : Number,
+    type : [mongoose.Schema.Types.ObjectId],
     required : true
   },
-  totalObligation : {
-    type : Number,
+  totalLiabilities : {
+    type : [mongoose.Schema.Types.ObjectId],
     required : true
   },
   creditScore : {
